@@ -1,0 +1,24 @@
+{
+    "name": "mattercx",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "units": "nodemon ./tests/units.js"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "publishConfig": {
+        "@MeekStudio:registry": "https://npm.pkg.github.com"
+    },
+    "dependencies": {
+        "@MeekStudio/DataTypesCX": "github:MeekStudio/DataTypesCX#main",
+        "@MeekStudio/QueryCX": "github:MeekStudio/QueryCX#main",
+        "dotenv": "^16.3.1",
+        "mongodb": "^6.2.0"
+    },
+    "devDependencies": {
+        "nodemon": "^3.0.1"
+    }
+}
