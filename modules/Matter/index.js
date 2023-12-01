@@ -1,8 +1,8 @@
 const { ShortText, Stamp, Squid } = require("@MeekStudio/DataTypesCX");
 const { Schema, SchemaError } = require("../Schema");
-const {QMatter} = require("../Queries")
-const {Model} = require("../Model")
-const {Edition} = require("../Edition")
+const { QMatter } = require("../Queries")
+const { Model } = require("../Model")
+const { Edition } = require("../Edition")
 
 class Matter {
 

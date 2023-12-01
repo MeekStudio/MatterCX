@@ -45,71 +45,84 @@ class Edition {
     }
 
     updateDraft(draftFrag){
-        const docFrag = {
-            draft: {
-                ...draftFrag
+        const promise = new Promise((resolve, reject) => {
+            const validateFragment = {
+                draft: {
+                    ...draftFrag
+                }
             }
-        }
 
-        const {
-            valid,
-            errors,
-            sanitised
-        } = this.#schema.validatePartial(docFrag);
+            const {
+                valid,
+                errors,
+                sanitised
+            } = this.#schema.validatePartial(validateFragment);
 
-        if(valid){
-            console.log("SAVE TO MONGO", sanitised);
-            // resultAfterUpdate = collection.findOneAndUpdate(filter, update, { returnDocument: 'after' });
-            // returnDocument contains the updated document, so I can ...
-            // this.#draft = resultAfterUpdate.value
-            
-        } else {
-            throw new SchemaError(errors)
-        }
-    }
-
-    approveDraft(){
-        // Validate Draft as Final
-        const docFrag = {
-            final: {
-                ...this.#draft
+            if(!valid){
+                reject(new SchemaError(errors))
             }
-        }
 
-        const {
-            valid,
-            errors,
-            sanitised
-        } = this.#schema.validatePartial(docFrag);
+            const filter = {id: this.id}
+            const docFrag = {
+                $set: sanitised
+            }
 
-        if(valid){
-            console.log("SAVE TO MONGO", sanitised);
-            // resultAfterUpdate = collection.findOneAndUpdate(filter, update, { returnDocument: 'after' });
-            // returnDocument contains the updated document, so I can ...
-            // this.#final = resultAfterUpdate.value
+            QEditions.updateOne(filter, docFrag)
+            .then(result => {
+                this.#draft = sanitised.draft;
+                resolve(this.#draft)
+            })
+            .catch(reject)
+        });
 
-            
-        } else {
-            throw new SchemaError(errors)
-        }
-
-        return this.#final
+        return promise;
 
     }
 
-    
+    async approveDraft(){
+        const promise = new Promise((resolve, reject) => {
+            const validateFragment = {
+                final: {
+                    ...this.#draft
+                }
+            }
 
-    
+            const {
+                valid,
+                errors,
+                sanitised
+            } = this.#schema.validatePartial(validateFragment);
+
+            if(!valid){
+                reject(new SchemaError(errors))
+            }
+
+            const filter = {id: this.id}
+            const docFrag = {
+                $set: sanitised
+            }
+
+            QEditions.updateOne(filter, docFrag)
+            .then(result => {
+                this.#final = sanitised.final;
+                resolve(this.#final)
+            })
+            .catch(reject)
+        })
+
+        return promise
+       
+
+    }
 
     static async open({edition, model} = {}){
-
-        console.log("OPEN", {edition, model});
 
         const editionDocument = await QEditions.findOne({id: edition});
 
         if(!editionDocument){
             return new Error("ERROR_OPENING_EDITION")
         }
+
 
         return new Edition({
             document: editionDocument,

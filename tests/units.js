@@ -60,7 +60,39 @@ async function openEdition(){
     console.log("defaultEdition:", defaultEdition.draft)
 }
 
+async function approveDraft(){
+    const Paul = await Matter.open({
+        model: "Project",
+        name: "Paul"
+    })
+
+    console.log("Paul:", Paul);
+
+    const defaultEdition = await Paul.slot("default");
+
+    const final = await defaultEdition.approveDraft();
+    console.log("final:", final)
+}
+
+async function updateDraft(){
+    const Paul = await Matter.open({
+        model: "Project",
+        name: "Paul"
+    })
+
+    console.log("Paul:", Paul);
+
+    const defaultEdition = await Paul.slot("default");
+
+    const updatedDraft = await defaultEdition.updateDraft({
+        title: "Howdie"
+    });
+    console.log("updatedDraft:", updatedDraft)
+}
+
 //createModel();
 //createMatter();
 //createEdition();
-openEdition();
+//openEdition();
+approveDraft();
+//updateDraft();
