@@ -188,7 +188,7 @@ class Matter {
         })
     }
 
-    slot(name){
+    slot(name = this.meta.defaultSlot){
         const slot = this.slots.find(slot => slot.name === name);
 
         if(!slot){
